@@ -7,30 +7,36 @@ const income = [
 ];
 
 const envelopes = [
-    {name: "Travel Budget",
+    {id: 1,
+    name: "Travel Budget",
     category: "Travel",
     allowence: 200,
     spent: 0},
-    {name: "Weekly Food Shop",
+    {id: 2,
+    name: "Weekly Food Shop",
     category: "Groceries",
     allowence: 100,
     spent: 0},
-    {name: "Physio",
+    {id: 3,
+    name: "Physio",
     category: "Health",
     allowence: 50,
     spent: 0},
-    {name: "Dining Out",
+    {id: 4,
+    name: "Dining Out",
     category: "Dining Out",
     allowence: 30,
     spent: 0},
-    {name: "Electricity Bill",
+    {id: 5,
+    name: "Electricity Bill",
     category: "Utilities",
     allowence: 80,
     spent: 0},
-    {name: "Cosmo\s Food",
+    {id: 6,
+    name: "Cosmo\s Food",
     category: "Pets",
     allowence: 80,
-    spent: 0},
+    spent: 0}
 ];
 
 const spendings = [
