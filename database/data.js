@@ -1,4 +1,7 @@
 // This file simulates a database and contains helper functions for finding certain data
+
+const envelopesRouter = require("../routers/envelopes");
+
 // A database will be connected to the App at a later date
 const data = {
 income: [
@@ -91,4 +94,21 @@ const findItemById = (dataType, id) => {
     } else {return null};
 }
 
-module.exports = {getAllDBItems, findItemById};
+// Add new item to databse
+const addItemToDatabase = (datatype, params) => {
+    const dataObject = datatype === 'envelopes' ? Object.assign({id: data[datatype].length + 1}, params) : params;
+    try {
+        if(dataObject) {
+            data[datatype].push(dataObject);
+            console.log(data[datatype]);
+            return dataObject;
+        } else {
+            throw new Error('something went wrong!');
+        }
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+module.exports = {getAllDBItems, findItemById, addItemToDatabase};

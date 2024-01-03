@@ -2,7 +2,7 @@ const express = require('express');
 const envelopesRouter = express.Router();
 
 // Import database helpers
-const {getAllDBItems, findItemById} = require('../database/data');
+const {getAllDBItems, findItemById, addItemToDatabase} = require('../database/data');
 
 // Get all envelopes
 envelopesRouter.get('/', (req, res) => {
@@ -11,6 +11,32 @@ envelopesRouter.get('/', (req, res) => {
         res.send(envelopes);
     } else {
         res.status(404).send(`Requested data not found`);
+    }
+});
+
+// Create a new envelope
+envelopesRouter.post('/', (req, res) => {
+    const request = req.query;
+    const category = request.category;
+    const name = request.name ? request.name : category;
+    const allowence = request.allowence;
+    const spent = request.spent ? request.spent : 0;
+    
+    if (category && name && allowence && (spent || spent === 0)) {
+        const object = {
+            name: name,
+            category: category,
+            allowence: Number(allowence),
+            spent: Number(spent)
+        };
+        const addedItem = addItemToDatabase('envelopes', object);
+        if(addedItem === null) {
+            res.status(400).send('Request failed');
+        } else {
+            res.send(object);
+        }
+    } else {
+        res.status(400).send('Required fields were not entered correctly');
     }
 });
 
@@ -30,8 +56,6 @@ envelopesRouter.param('envelopeID', (req, res, next, envelopeID) => {
 envelopesRouter.get('/:envelopeID', (req, res) => {
     res.send(req.item);
 })
-
-// Create a new envelope
 
 // Update an envelope by ID
 
