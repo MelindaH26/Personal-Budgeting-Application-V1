@@ -1,6 +1,13 @@
-// This file simulates a database and contains helper functions for finding certain data
+// This file simulates a database and contains helper functions for GET, POST, PUT and DELETE requests
 
-const envelopesRouter = require("../routers/envelopes");
+/*TODO
+- Create data structes for each data type that functions can use to loop through each needed key/value pair and assign/reassign them. 
+This is to help reduce the amount of logic needed in functions that add or update objects in the database 
+- remove name from envelopes data
+
+TESTING
+- check that the functions work for all data types -> routers for other data types must be setup first
+*/
 
 // A database will be connected to the App at a later date
 const data = {
@@ -48,9 +55,11 @@ spendings: [
 ]
 };
 
+const keysThatShouldBeNumbers = ['id', 'allowence', 'spent', 'ammount'];
+
 // DATA HELPER FUNCTIONS
 // get all items of certain data type
-const getAllDBItems = dataType => {
+const getItemsFromDatabase = dataType => {
     const dataToGet = data[dataType];
     try {
         if (dataToGet) {
@@ -66,8 +75,8 @@ const getAllDBItems = dataType => {
 
 // Get item by ID
 const findItemById = (dataType, id) => {
-    const dataCheck = getAllDBItems(dataType);
-    // if type of data exists in database
+    const dataCheck = getItemsFromDatabase(dataType);
+    // if type of data type exists in database
     if (dataCheck !== null) {
         const itemId = Number(id);
         let item = null;
@@ -111,4 +120,24 @@ const addItemToDatabase = (datatype, params) => {
     }
 }
 
-module.exports = {getAllDBItems, findItemById, addItemToDatabase};
+// Update item in the database 
+const updateItemInDatabase = (newParams, itemToUpdate) => {
+    // itemToUpdate is a direct reference of the object that needs to be updated
+    // so we dont need to use a datatype here
+    const objectLength = Object.keys(newParams).length;
+    for (let i = 0; i < objectLength; i++) {
+        let key = Object.keys(newParams)[i];
+        let value = Object.values(newParams)[i];
+        // if key exists in database update it
+        if (itemToUpdate[key]) {
+            // converts values that should be numbers
+            if(keysThatShouldBeNumbers.includes(key) === true) {
+                value = Number(value);
+            }
+            itemToUpdate[key] = value;
+        }
+
+    }
+}
+
+module.exports = {getItemsFromDatabase, findItemById, addItemToDatabase, updateItemInDatabase};

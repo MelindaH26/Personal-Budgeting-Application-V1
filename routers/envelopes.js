@@ -2,11 +2,11 @@ const express = require('express');
 const envelopesRouter = express.Router();
 
 // Import database helpers
-const {getAllDBItems, findItemById, addItemToDatabase} = require('../database/data');
+const {getItemsFromDatabase, findItemById, addItemToDatabase, updateItemInDatabase} = require('../database/data');
 
 // Get all envelopes
 envelopesRouter.get('/', (req, res) => {
-    const envelopes = getAllDBItems('envelopes');
+    const envelopes = getItemsFromDatabase('envelopes');
     if (envelopes !== null) {
         res.send(envelopes);
     } else {
@@ -57,7 +57,14 @@ envelopesRouter.get('/:envelopeID', (req, res) => {
     res.send(req.item);
 })
 
-// Update an envelope by ID
+// Update an envelopes details by ID
+envelopesRouter.put('/:envelopeID', (req, res) => {
+    // create function to update item in db
+    updateItemInDatabase('envelopes', req.query, req.item);
+})
+
+// Update an envelopes spent ammount
+// This is actually adding spendings to a desired category
 
 // Delete an envelope by ID
 
