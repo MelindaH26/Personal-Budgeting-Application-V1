@@ -2,7 +2,7 @@ const express = require('express');
 const envelopesRouter = express.Router();
 
 // Import database helpers
-const {getItemsFromDatabase, findItemById, addItemToDatabase, updateItemInDatabase} = require('../database/data');
+const {getItemsFromDatabase, findItemById, addItemToDatabase, updateItemInDatabase, deleteItemFromDatabase} = require('../database/data');
 
 // Get all envelopes
 envelopesRouter.get('/', (req, res) => {
@@ -55,18 +55,30 @@ envelopesRouter.param('envelopeID', (req, res, next, envelopeID) => {
 // Get a single envelope by ID
 envelopesRouter.get('/:envelopeID', (req, res) => {
     res.send(req.item);
-})
+});
 
 // Update an envelopes details by ID
 envelopesRouter.put('/:envelopeID', (req, res) => {
-    // create function to update item in db
-    updateItemInDatabase('envelopes', req.query, req.item);
-})
+    const updateditem = updateItemInDatabase(req.query, req.item);
+    if (updateditem === null) {
+        res.status(400).send(`Values that shouldn\'t exist were sent in the request`);
+    } else {
+        res.send(updateditem);
+    }
+});
 
 // Update an envelopes spent ammount
 // This is actually adding spendings to a desired category
 
 // Delete an envelope by ID
+envelopesRouter.delete('/:envelopeID', (req, res) => {
+    const itemDeleted = deleteItemFromDatabase('envelopes', req.item);
+    if(!itemDeleted) {
+        res.status(400).send();
+    } else {
+        res.send(`Envelope for \'${req.item.category}\' deleted`);
+    }
+});
 
 // export router
 module.exports = envelopesRouter;

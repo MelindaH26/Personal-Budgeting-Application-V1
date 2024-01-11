@@ -4,6 +4,7 @@
 - Create data structes for each data type that functions can use to loop through each needed key/value pair and assign/reassign them. 
 This is to help reduce the amount of logic needed in functions that add or update objects in the database 
 - remove name from envelopes data
+- updateItemInDatabase needs to acount for non numeric values entered where numeric ones should be 
 
 TESTING
 - check that the functions work for all data types -> routers for other data types must be setup first
@@ -12,9 +13,9 @@ TESTING
 // A database will be connected to the App at a later date
 const data = {
 income: [
-    {name: "melinda\s income",
+    {name: "melinda\'s income",
     ammount: 1000,
-    requency: "weekly"}
+    frequency: "weekly"}
 ],
 envelopes: [
     {id: 1,
@@ -49,9 +50,10 @@ envelopes: [
     spent: 0}
 ],
 spendings: [
-    {title: "Belmodo\s",
+    {title: "Belmodo\'s",
     category: "Groceries",
-    ammount: 65}
+    ammount: 65,
+    date: '2024:01:01'}
 ]
 };
 
@@ -135,9 +137,19 @@ const updateItemInDatabase = (newParams, itemToUpdate) => {
                 value = Number(value);
             }
             itemToUpdate[key] = value;
+        } else {
+            return null;
         }
-
     }
+    return itemToUpdate;
 }
 
-module.exports = {getItemsFromDatabase, findItemById, addItemToDatabase, updateItemInDatabase};
+// Delete item from databse
+const deleteItemFromDatabase = (dataType, params) => {
+    const daraArray = data[dataType];
+    const idOfItemToRemove = params.id;
+    splice = daraArray.splice(daraArray.findIndex(item => item.id === idOfItemToRemove), 1);
+    return true;
+}
+
+module.exports = {getItemsFromDatabase, findItemById, addItemToDatabase, updateItemInDatabase, deleteItemFromDatabase};
