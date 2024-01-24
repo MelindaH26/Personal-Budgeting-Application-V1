@@ -20,38 +20,62 @@ income: [
 envelopes: [
     {id: 1,
     name: "Travel Budget",
-    category: "Travel",
+    "category-id": 1,
+    "user-id": 1,
     allowence: 200,
     spent: 0},
     {id: 2,
     name: "Weekly Food Shop",
-    category: "Groceries",
+    "category-id": 2,
+    "user-id": 1,
     allowence: 100,
     spent: 0},
     {id: 3,
     name: "Physio",
-    category: "Health",
+    "category-id": 3,
+    "user-id": 1,
     allowence: 50,
     spent: 0},
     {id: 4,
     name: "Dining Out",
-    category: "Dining Out",
+    "category-id": 3,
+    "user-id": 1,
     allowence: 30,
     spent: 0},
     {id: 5,
     name: "Electricity Bill",
-    category: "Utilities",
+    "category-id": 4,
+    "user-id": 1,
     allowence: 80,
     spent: 0},
     {id: 6,
     name: "Cosmo\'s Food",
-    category: "Pets",
+    "category-id": 5,
+    "user-id": 1,
     allowence: 80,
     spent: 0}
 ],
+categories: [
+    {id: 1,
+    category: "Travel",
+    "user-id": 1},
+    {id: 2,
+    catgeory: "Groceries",
+    "user-id": 1},
+    {id: 3,
+    cactegory: "Health",
+    "user-id": 1},
+    {id: 4,
+    category: "Utilities",
+    "user-id": 1},
+    {id: 5, 
+    category: "Pets",
+    "user-id": 1}
+],
 spendings: [
-    {title: "Belmodo\'s",
-    category: "Groceries",
+    {id: 1,
+    title: "Belmodo\'s",
+    "category-id": 2,
     ammount: 65,
     date: '2024:01:01'}
 ]
@@ -107,7 +131,7 @@ const findItemById = (dataType, id) => {
 
 // Add new item to databse
 const addItemToDatabase = (datatype, params) => {
-    const dataObject = datatype === 'envelopes' ? Object.assign({id: data[datatype].length + 1}, params) : params;
+    const dataObject = datatype === ('envelopes' || 'spendings') ? Object.assign({id: data[datatype].length + 1}, params) : params;
     try {
         if(dataObject) {
             data[datatype].push(dataObject);
