@@ -20,9 +20,9 @@ envelopesRouter.post('/', (req, res) => {
     const category = request.category;
     const name = request.name ? request.name : category;
     const allowence = request.allowence;
-    const spent = request.spent ? request.spent : 0;
+    const spent = 0;
     
-    if (category && name && allowence && (spent || spent === 0)) {
+    if (category && name && allowence) {
         const object = {
             name: name,
             category: category,
@@ -59,7 +59,7 @@ envelopesRouter.get('/:envelopeID', (req, res) => {
 
 // Update an envelopes details by ID
 envelopesRouter.put('/:envelopeID', (req, res) => {
-    const updateditem = updateItemInDatabase(req.query, req.item);
+    const updateditem = updateItemInDatabase(req.body, req.item);
     if (updateditem === null) {
         res.status(400).send(`Values that shouldn\'t exist were sent in the request`);
     } else {

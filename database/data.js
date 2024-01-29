@@ -3,85 +3,62 @@
 /*TODO
 - Create data structes for each data type that functions can use to loop through each needed key/value pair and assign/reassign them. 
 This is to help reduce the amount of logic needed in functions that add or update objects in the database 
-- remove name from envelopes data
+- Change name to catefory for envelopes data
 - updateItemInDatabase needs to acount for non numeric values entered where numeric ones should be 
-
-TESTING
-- check that the functions work for all data types -> routers for other data types must be setup first
+- Updave updateEnvelopeSpendings to be used when a spending is updated. This could be += or -=.
 */
 
-// A database will be connected to the App at a later date
+// Data structure to simulate a database
 const data = {
 income: [
     {name: "melinda\'s income",
     ammount: 1000,
-    frequency: "weekly"}
+    frequency: "weekly",
+    "user-id": 1,}
 ],
 envelopes: [
     {id: 1,
     name: "Travel Budget",
-    "category-id": 1,
     "user-id": 1,
     allowence: 200,
     spent: 0},
     {id: 2,
-    name: "Weekly Food Shop",
-    "category-id": 2,
+    name: "Food Shopping",
     "user-id": 1,
     allowence: 100,
-    spent: 0},
+    spent: 65},
     {id: 3,
     name: "Physio",
-    "category-id": 3,
     "user-id": 1,
     allowence: 50,
     spent: 0},
     {id: 4,
     name: "Dining Out",
-    "category-id": 3,
     "user-id": 1,
     allowence: 30,
     spent: 0},
     {id: 5,
     name: "Electricity Bill",
-    "category-id": 4,
     "user-id": 1,
     allowence: 80,
     spent: 0},
     {id: 6,
     name: "Cosmo\'s Food",
-    "category-id": 5,
     "user-id": 1,
     allowence: 80,
     spent: 0}
 ],
-categories: [
-    {id: 1,
-    category: "Travel",
-    "user-id": 1},
-    {id: 2,
-    catgeory: "Groceries",
-    "user-id": 1},
-    {id: 3,
-    cactegory: "Health",
-    "user-id": 1},
-    {id: 4,
-    category: "Utilities",
-    "user-id": 1},
-    {id: 5, 
-    category: "Pets",
-    "user-id": 1}
-],
 spendings: [
     {id: 1,
     title: "Belmodo\'s",
-    "category-id": 2,
+    category: "Food Shopping",
+    "user-id": 1,
     ammount: 65,
     date: '2024:01:01'}
 ]
 };
 
-const keysThatShouldBeNumbers = ['id', 'allowence', 'spent', 'ammount'];
+const keysThatShouldBeNumbers = ['id', 'allowence', 'spent', 'ammount', 'user-id'];
 
 // DATA HELPER FUNCTIONS
 // get all items of certain data type
@@ -131,11 +108,11 @@ const findItemById = (dataType, id) => {
 
 // Add new item to databse
 const addItemToDatabase = (datatype, params) => {
-    const dataObject = datatype === ('envelopes' || 'spendings') ? Object.assign({id: data[datatype].length + 1}, params) : params;
+    // assign ID to new item
+    const dataObject = Object.assign({id: data[datatype].length + 1}, params);
     try {
         if(dataObject) {
             data[datatype].push(dataObject);
-            console.log(data[datatype]);
             return dataObject;
         } else {
             throw new Error('something went wrong!');
@@ -176,4 +153,23 @@ const deleteItemFromDatabase = (dataType, params) => {
     return true;
 }
 
-module.exports = {getItemsFromDatabase, findItemById, addItemToDatabase, updateItemInDatabase, deleteItemFromDatabase};
+// Get envelope by category
+const getEnvelopeByCategory = (cat) => {
+    const array = data.envelopes;
+    const filterEnvelope = array.filter(function (envelope) {
+        if (envelope.name === cat) {
+            return envelope;
+        }
+    });
+    return filterEnvelope;
+}
+
+// Update envelope spendings
+const updateEnvelopeSpendings = (cat, spendings) => {
+    // get envelope by cat
+    const envelope = getEnvelopeByCategory(cat);
+    // update envelope spendings
+    envelope[0].spent += Number(spendings);
+}
+
+module.exports = {getItemsFromDatabase, findItemById, addItemToDatabase, updateItemInDatabase, deleteItemFromDatabase, updateEnvelopeSpendings};
